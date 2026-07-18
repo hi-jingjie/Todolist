@@ -1,0 +1,207 @@
+<view class="page" bindtap="onPageTap">
+  <view class="header">
+    <text class="header-title">待办</text>
+  </view>
+
+  <scroll-view
+    class="tabs-scroll"
+    scroll-x
+    show-scrollbar="{{false}}"
+    catchtap="noop"
+  >
+  <view class="tabs">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="id"
+      class="tab {{tab === item.id ? 'tab--active' : ''}}"
+      data-tab="{{item.id}}"
+      bindtap="onTab"
+    >
+      {{item.name}}
+    </view>
+  </view>
+  </scroll-view>
+
+  <view class="search" catchtap="noop">
+    <view class="search-icon">
+      <view class="search-icon-ring" />
+      <view class="search-icon-line" />
+    </view>
+    <input
+      class="search-input"
+      value="{{keyword}}"
+      placeholder="搜索待办标题"
+      confirm-type="search"
+      bindinput="onSearchInput"
+    />
+    <view wx:if="{{keyword}}" class="search-clear" catchtap="onClearSearch">×</view>
+  </view>
+
+  <view wx:if="{{overdueCount}}" class="due-alert" catchtap="noop">
+    <view class="due-alert-dot" />
+    <text class="due-alert-text">{{overdueText}}</text>
+  </view>
+
+  <view class="filter-toggle" catchtap="onToggleFilters">
+    <text class="filter-toggle-text">筛选与批量</text>
+    <text class="filter-toggle-sub">{{filterSummary}}</text>
+    <text class="filter-toggle-arrow">{{filtersOpen ? '⌃' : '⌄'}}</text>
+  </view>
+
+  <view wx:if="{{filtersOpen}}" class="toolbar" catchtap="noop">
+    <view class="filter-row">
+      <text class="toolbar-label">状态</text>
+      <view class="filter-options">
+        <view
+          wx:for="{{statusFilters}}"
+          wx:key="id"
+          class="filter-chip {{statusFilter === item.id ? 'filter-chip--active' : ''}}"
+          data-status="{{item.id}}"
+          bindtap="onStatusFilter"
+        >
+          {{item.name}}
+        </view>
+      </view>
+    </view>
+    <view class="filter-row">
+      <text class="toolbar-label">优先级</text>
+      <view class="filter-options">
+        <view
+          wx:for="{{priorityFilters}}"
+          wx:key="id"
+          class="filter-chip {{priorityFilter === item.id ? 'filter-chip--active' : ''}}"
+          data-priority="{{item.id}}"
+          bindtap="onPriorityFilter"
+        >
+          {{item.name}}
+        </view>
+      </view>
+    </view>
+    <view class="filter-row filter-row--sort">
+      <text class="toolbar-label">排序</text>
+      <view class="sort-options">
+        <view
+          wx:for="{{sortModes}}"
+          wx:key="id"
+          class="sort-chip {{sortMode === item.id ? 'sort-chip--active' : ''}}"
+          data-sort="{{item.id}}"
+          bindtap="onSortMode"
+        >
+          {{item.name}}
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{!selectionMode}}" class="batch-actions">
+      <view class="batch-btn" bindtap="onMarkVisibleDone">全部完成</view>
+      <view class="batch-btn" bindtap="onClearDone">清除已完成</view>
+      <view class="batch-btn batch-btn--danger" bindtap="onEnterBatchDelete">批量删除</view>
+    </view>
+    <view wx:else class="batch-actions">
+      <view class="batch-btn batch-btn--danger" bindtap="onDeleteSelected">
+        删除选中<text wx:if="{{selectedIds.length}}">({{selectedIds.length}})</text>
+      </view>
+      <view class="batch-btn" bindtap="onCancelBatch">取消</view>
+    </view>
+  </view>
+
+  <scroll-view class="list-scroll" scroll-y show-scrollbar="{{false}}">
+    <block wx:if="{{list.length}}">
+      <view
+        wx:for="{{list}}"
+        wx:key="id"
+        class="swipe-cell"
+        catchtap="noop"
+      >
+        <view class="swipe-actions">
+          <view
+            class="swipe-del"
+            data-id="{{item.id}}"
+            catchtap="onDeleteTap"
+          >
+            删除
+          </view>
+        </view>
+        <view
+          class="swipe-body {{swipeOpenId === item.id ? 'swipe-body--open' : ''}}"
+          data-id="{{item.id}}"
+          bindtouchstart="onSwipeStart"
+          bindtouchend="onSwipeEnd"
+        >
+          <view
+            wx:if="{{selectionMode}}"
+            class="select-cb {{item.selected ? 'select-cb--on' : ''}}"
+            catchtap="onToggleSelect"
+            data-id="{{item.id}}"
+          >
+            {{item.selected ? '✓' : ''}}
+          </view>
+          <view wx:else class="todo-cb" catchtap="onToggle" data-id="{{item.id}}">
+            <checkbox checked="{{item.done}}" color="var(--color-primary)" />
+          </view>
+          <view class="todo-body" data-id="{{item.id}}" bindtap="onEdit">
+            <view class="todo-line1">
+              <view class="priority-badge priority-badge--{{item.priority}}">
+                {{item.priorityText}}
+              </view>
+              <text class="todo-title {{item.done ? 'todo-title--done' : ''}}">{{item.title}}</text>
+              <view
+                wx:if="{{!selectionMode && !item.done}}"
+                class="todo-pin-btn {{item.pinned ? 'todo-pin-btn--on' : ''}}"
+                data-id="{{item.id}}"
+                catchtap="onTogglePin"
+              >
+                {{item.pinned ? '已置顶' : '置顶'}}
+              </view>
+              <view
+                wx:if="{{!selectionMode && !item.done}}"
+                class="todo-focus-btn"
+                data-id="{{item.id}}"
+                catchtap="onFocusTodo"
+              >
+                专注
+              </view>
+            </view>
+            <view class="todo-meta">
+              <text class="todo-due todo-due--{{item.dueStatus}} {{item.isOverdue ? 'todo-due--alert' : ''}}">{{item.dueText}}</text>
+              <text wx:if="{{item.repeatText}}" class="todo-tag">{{item.repeatText}}</text>
+              <text wx:if="{{item.focusText}}" class="todo-tag">{{item.focusText}}</text>
+              <text wx:if="{{item.notePreview}}" class="todo-note">{{item.notePreview}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+    <view wx:else class="empty">
+      <view class="empty-icon" />
+      <text class="empty-title">{{keyword ? '没有匹配待办' : '暂无待办'}}</text>
+      <text class="empty-hint">{{keyword ? '换个关键词试试' : '右下角添加一条'}}</text>
+    </view>
+    <view class="list-pad" />
+  </scroll-view>
+
+  <view class="focus-fab" catchtap="onFocus">
+    <view class="focus-fab-icon">
+      <view class="focus-entry-dot" />
+    </view>
+    <text class="focus-fab-text">专注</text>
+  </view>
+
+  <view class="fab" catchtap="onAdd">
+    <text class="fab-plus">＋</text>
+  </view>
+
+  <view class="bottom-nav" catchtap="noop">
+    <view class="bottom-nav-item bottom-nav-item--active">
+      <text class="bottom-nav-icon">✓</text>
+      <text class="bottom-nav-label">待办</text>
+    </view>
+    <view class="bottom-nav-item" bindtap="onNavStats">
+      <text class="bottom-nav-icon">∑</text>
+      <text class="bottom-nav-label">统计</text>
+    </view>
+    <view class="bottom-nav-item" bindtap="onNavArchive">
+      <text class="bottom-nav-icon">□</text>
+      <text class="bottom-nav-label">归档</text>
+    </view>
+  </view>
+</view>

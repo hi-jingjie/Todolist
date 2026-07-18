@@ -1,0 +1,115 @@
+.page {
+  min-height: 100vh;
+  padding: calc(56rpx + env(safe-area-inset-top)) var(--space-lg)
+    calc(176rpx + env(safe-area-inset-bottom));
+  background: var(--color-bg);
+  box-sizing: border-box;
+}
+
+.header {
+  margin-bottom: var(--space-lg);
+}
+
+.title {
+  display: block;
+  color: var(--color-text);
+  font-size: 44rpx;
+  font-weight: 700;
+}
+
+.subtitle {
+  display: block;
+  margin-top: var(--space-sm);
+  color: var(--color-text-secondary);
+  font-size: 26rpx;
+}
+
+.archive-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1rpx solid var(--color-border);
+  background: var(--color-surface);
+  box-sizing: border-box;
+}
+
+.archive-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.archive-title {
+  display: block;
+  color: var(--color-text);
+  font-size: 30rpx;
+  font-weight: 600;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.archive-meta {
+  display: block;
+  margin-top: 8rpx;
+  color: var(--color-text-secondary);
+  font-size: 24rpx;
+}
+
+.archive-note {
+  display: block;
+  margin-top: 8rpx;
+  color: var(--color-text-secondary);
+  font-size: 24rpx;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.archive-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+  margin-left: var(--space-md);
+}
+
+.archive-btn {
+  min-width: 88rpx;
+  padding: 12rpx 10rpx;
+  border-radius: var(--radius-md);
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  font-size: 24rpx;
+  text-align: center;
+}
+
+.archive-btn--danger {
+  color: var(--color-danger);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 140rpx var(--space-lg);
+}
+
+.empty-icon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 24rpx;
+  background: var(--color-primary-soft);
+  margin-bottom: var(--space-lg);
+}
+
+.empty-title {
+  font-size: 32rpx;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+}

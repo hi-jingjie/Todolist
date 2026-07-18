@@ -1,0 +1,97 @@
+<view class="page">
+  <view class="card">
+    <view class="field">
+      <text class="label">标题</text>
+      <input
+        class="input"
+        value="{{title}}"
+        placeholder="要做什么？"
+        maxlength="200"
+        bindinput="onTitleInput"
+      />
+    </view>
+
+    <view class="field field--row">
+      <text class="label">分类</text>
+      <picker
+        mode="selector"
+        range="{{categories}}"
+        range-key="name"
+        value="{{categoryIndex}}"
+        bindchange="onCategoryPick"
+      >
+        <view class="picker-val">{{categories[categoryIndex].name}}</view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <text class="label">新增分类</text>
+      <view class="category-add">
+        <input
+          class="category-input"
+          value="{{newCategoryName}}"
+          placeholder="输入分类名称"
+          maxlength="12"
+          bindinput="onNewCategoryInput"
+        />
+        <view class="category-add-btn" bindtap="onAddCategory">添加</view>
+      </view>
+    </view>
+
+    <view class="field field--row">
+      <text class="label">优先级</text>
+      <picker
+        mode="selector"
+        range="{{priorities}}"
+        range-key="name"
+        value="{{priorityIndex}}"
+        bindchange="onPriorityPick"
+      >
+        <view class="picker-val">{{priorities[priorityIndex].name}}</view>
+      </picker>
+    </view>
+
+    <view class="field field--row">
+      <text class="label">截止日期</text>
+      <view class="due-edit">
+        <picker mode="date" value="{{dueDate}}" bindchange="onDuePick">
+          <view class="picker-val">{{dueDate || '未设置'}}</view>
+        </picker>
+        <view
+          wx:if="{{dueDate}}"
+          class="clear-date"
+          catchtap="onClearDueDate"
+        >
+          清空
+        </view>
+      </view>
+    </view>
+
+    <view class="field field--row">
+      <text class="label">重复</text>
+      <picker
+        mode="selector"
+        range="{{repeats}}"
+        range-key="name"
+        value="{{repeatIndex}}"
+        bindchange="onRepeatPick"
+      >
+        <view class="picker-val">{{repeats[repeatIndex].name}}</view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <text class="label">备注</text>
+      <textarea
+        class="note-input"
+        value="{{note}}"
+        placeholder="补充说明、链接或步骤"
+        maxlength="500"
+        bindinput="onNoteInput"
+      />
+    </view>
+  </view>
+
+  <view class="btn primary" bindtap="onSave">保存</view>
+  <view wx:if="{{id}}" class="btn ghost" bindtap="onDelete">删除</view>
+</view>

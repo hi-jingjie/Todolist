@@ -1,0 +1,41 @@
+<view class="page">
+  <view class="header">
+    <text class="title">完成归档</text>
+    <text class="subtitle">这里保存已经完成的待办</text>
+  </view>
+
+  <block wx:if="{{list.length}}">
+    <view wx:for="{{list}}" wx:key="id" class="archive-card">
+      <view class="archive-main">
+        <text class="archive-title">{{item.title}}</text>
+        <text class="archive-meta">{{item.dueText}}</text>
+        <text wx:if="{{item.notePreview}}" class="archive-note">{{item.notePreview}}</text>
+      </view>
+      <view class="archive-actions">
+        <view class="archive-btn" data-id="{{item.id}}" bindtap="onRestore">恢复</view>
+        <view class="archive-btn archive-btn--danger" data-id="{{item.id}}" bindtap="onDelete">删除</view>
+      </view>
+    </view>
+  </block>
+
+  <view wx:else class="empty">
+    <view class="empty-icon" />
+    <text class="empty-title">还没有归档</text>
+    <text class="empty-hint">完成待办后会出现在这里</text>
+  </view>
+
+  <view class="bottom-nav">
+    <view class="bottom-nav-item" bindtap="onNavTodo">
+      <text class="bottom-nav-icon">✓</text>
+      <text class="bottom-nav-label">待办</text>
+    </view>
+    <view class="bottom-nav-item" bindtap="onNavStats">
+      <text class="bottom-nav-icon">∑</text>
+      <text class="bottom-nav-label">统计</text>
+    </view>
+    <view class="bottom-nav-item bottom-nav-item--active">
+      <text class="bottom-nav-icon">□</text>
+      <text class="bottom-nav-label">归档</text>
+    </view>
+  </view>
+</view>

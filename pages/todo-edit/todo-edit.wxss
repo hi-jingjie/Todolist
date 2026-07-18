@@ -1,0 +1,135 @@
+.page {
+  padding: var(--space-lg);
+  padding-bottom: calc(var(--space-xl) + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.field {
+  margin-bottom: var(--space-lg);
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field--row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  display: block;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.field--row .label {
+  margin-bottom: 0;
+  margin-right: var(--space-md);
+  flex-shrink: 0;
+}
+
+.input {
+  width: 100%;
+  min-height: 88rpx;
+  padding: var(--space-sm) 0;
+  font-size: 32rpx;
+  color: var(--color-text);
+  box-sizing: border-box;
+}
+
+.picker-val {
+  font-size: 30rpx;
+  color: var(--color-text);
+  text-align: right;
+  padding: var(--space-sm) 0;
+}
+
+.category-add {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 88rpx;
+  border: 1rpx solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding-left: var(--space-md);
+  box-sizing: border-box;
+}
+
+.note-input {
+  width: 100%;
+  min-height: 180rpx;
+  padding: var(--space-md);
+  border: 1rpx solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: 30rpx;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.category-input {
+  flex: 1;
+  min-width: 0;
+  height: 88rpx;
+  font-size: 30rpx;
+  color: var(--color-text);
+}
+
+.category-add-btn {
+  margin-left: var(--space-sm);
+  padding: 18rpx 24rpx;
+  color: var(--color-surface);
+  background: var(--color-primary);
+  border-radius: var(--radius-md);
+  font-size: 26rpx;
+  flex-shrink: 0;
+}
+
+.due-edit {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.clear-date {
+  margin-left: var(--space-md);
+  padding: 10rpx 18rpx;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 24rpx;
+  flex-shrink: 0;
+}
+
+.btn {
+  margin-bottom: var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: 30rpx;
+  text-align: center;
+  padding: 26rpx 0;
+  font-weight: 500;
+}
+
+.btn.primary {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.btn.ghost {
+  background: var(--color-surface);
+  color: var(--color-danger);
+  border: 1rpx solid var(--color-border);
+}

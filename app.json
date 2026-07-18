@@ -1,0 +1,18 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/todo-edit/todo-edit",
+    "pages/focus/focus",
+    "pages/stats/stats",
+    "pages/archive/archive"
+  ],
+  "window": {
+    "navigationBarTitleText": "待办",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F4F4F5",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

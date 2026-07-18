@@ -1,0 +1,54 @@
+---
+description: 微信小程序 WXML/WXSS/JS 原生语法、样式与存储约定
+globs: "**/*.{wxml,wxss,js}"
+alwaysApply: false
+---
+
+# 微信小程序（原生）
+
+## 技术栈
+
+- 页面与组件：**WXML + WXSS + JS**，使用原生小程序语法与生命周期，不引入 Vue/React 等框架语法。
+- API 一律使用 **`wx.xxx`**（如 `wx.request`、`wx.navigateTo`），不写未命名空间的全局别名。
+
+## 样式（简洁现代）
+
+- 留白充足：区块之间用 **rpx** 控制间距（如 `24rpx`–`48rpx`），避免元素挤在一起。
+- 字体层级清晰：标题/正文/辅助信息区分字号与字重，颜色只用变量，不写散落十六进制。
+- 圆角、阴影克制：小圆角 + 轻阴影即可，避免厚重装饰。
+
+## 颜色：WXSS 变量统一管理
+
+- 在 **`app.wxss`**（或全局入口样式）的 `page` / `:root` 中定义 **`--token-name`**，页面与组件只用 `var(--xxx)`。
+- 语义化命名，例如：`--color-primary`、`--color-text`、`--color-text-secondary`、`--color-bg`、`--color-border`。
+
+```wxss
+/* app.wxss */
+page {
+  --color-primary: #07c160;
+  --color-text: #1a1a1a;
+  --color-bg: #f7f8fa;
+}
+
+.title {
+  color: var(--color-text);
+}
+```
+
+## 本地存储
+
+- 读写本地缓存使用 **`wx.setStorageSync` / `wx.getStorageSync`**（及配套的 `remove`、`clear` 等同步 API），与项目约定保持一致。
+- Key 使用统一前缀或常量集中管理，避免魔法字符串散落在业务里。
+
+```javascript
+const STORAGE_KEY_TODOS = 'todos';
+
+function saveTodos(list) {
+  wx.setStorageSync(STORAGE_KEY_TODOS, list);
+}
+```
+
+## 代码习惯
+
+- **WXML**：语义清晰，列表用 `wx:for` 时务必写 **`wx:key`**。
+- **JS**：逻辑放在 `Page` / `Component` 的合理生命周期内；网络与存储失败用 `wx.showToast` 等给出简短反馈。
