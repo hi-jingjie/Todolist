@@ -27,7 +27,12 @@ let first = todo.getTodos()[0]
 assert.strictEqual(first.note, '先整理参考文献', 'stores todo note')
 assert.strictEqual(first.repeat, 'daily', 'stores repeat rule')
 
-todo.completeTodo(first.id)
+const repeatedCompletion = todo.completeTodo(first.id)
+assert.strictEqual(
+  repeatedCompletion.createdNext,
+  true,
+  'reports when completion creates the next repeated todo'
+)
 const afterComplete = todo.getTodos()
 const completed = afterComplete.find((item) => item.id === first.id)
 const nextDaily = afterComplete.find((item) => item.id !== first.id)
@@ -70,3 +75,12 @@ const focused = todo.getTodoById(focusTodo.id)
 assert.strictEqual(focused.done, true, 'focus completion marks todo done')
 assert.strictEqual(focused.focusSeconds, 1500, 'records focus seconds')
 assert.strictEqual(focused.focusCount, 1, 'records focus count')
+
+todo.addTodo({ title: '一次性任务', category: 'life', priority: 'low' })
+const oneTimeTodo = todo.getTodos()[0]
+const oneTimeCompletion = todo.completeTodo(oneTimeTodo.id)
+assert.strictEqual(
+  oneTimeCompletion.createdNext,
+  false,
+  'reports when completion does not create another todo'
+)

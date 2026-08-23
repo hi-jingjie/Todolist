@@ -1,6 +1,10 @@
 <view class="page" bindtap="onPageTap">
   <view class="header">
-    <text class="header-title">待办</text>
+    <view class="header-copy">
+      <text class="header-date">{{overview.dateText}}</text>
+      <text class="header-title">今天要做什么？</text>
+      <text class="header-summary">{{overview.summaryText}}</text>
+    </view>
   </view>
 
   <scroll-view
@@ -109,7 +113,7 @@
       <view
         wx:for="{{list}}"
         wx:key="id"
-        class="swipe-cell"
+        class="swipe-cell {{completingId === item.id ? 'swipe-cell--completing' : ''}}"
         catchtap="noop"
       >
         <view class="swipe-actions">
@@ -122,7 +126,7 @@
           </view>
         </view>
         <view
-          class="swipe-body {{swipeOpenId === item.id ? 'swipe-body--open' : ''}}"
+          class="swipe-body swipe-body--priority-{{item.priority}} {{swipeOpenId === item.id ? 'swipe-body--open' : ''}}"
           data-id="{{item.id}}"
           bindtouchstart="onSwipeStart"
           bindtouchend="onSwipeEnd"
@@ -136,32 +140,32 @@
             {{item.selected ? '✓' : ''}}
           </view>
           <view wx:else class="todo-cb" catchtap="onToggle" data-id="{{item.id}}">
-            <checkbox checked="{{item.done}}" color="var(--color-primary)" />
+            <checkbox checked="{{item.done || completingId === item.id}}" color="var(--color-primary)" />
           </view>
           <view class="todo-body" data-id="{{item.id}}" bindtap="onEdit">
             <view class="todo-line1">
-              <view class="priority-badge priority-badge--{{item.priority}}">
-                {{item.priorityText}}
-              </view>
               <text class="todo-title {{item.done ? 'todo-title--done' : ''}}">{{item.title}}</text>
-              <view
-                wx:if="{{!selectionMode && !item.done}}"
-                class="todo-pin-btn {{item.pinned ? 'todo-pin-btn--on' : ''}}"
-                data-id="{{item.id}}"
-                catchtap="onTogglePin"
-              >
-                {{item.pinned ? '已置顶' : '置顶'}}
-              </view>
-              <view
-                wx:if="{{!selectionMode && !item.done}}"
-                class="todo-focus-btn"
-                data-id="{{item.id}}"
-                catchtap="onFocusTodo"
-              >
-                专注
+              <view wx:if="{{!selectionMode && !item.done}}" class="todo-actions">
+                <view
+                  class="todo-icon-btn {{item.pinned ? 'todo-icon-btn--active' : ''}}"
+                  aria-label="{{item.pinned ? '取消置顶' : '置顶'}}"
+                  data-id="{{item.id}}"
+                  catchtap="onTogglePin"
+                >
+                  <view class="pin-icon"><view class="pin-icon-line" /></view>
+                </view>
+                <view
+                  class="todo-icon-btn todo-icon-btn--focus"
+                  aria-label="专注"
+                  data-id="{{item.id}}"
+                  catchtap="onFocusTodo"
+                >
+                  <view class="focus-icon"><view class="focus-icon-dot" /></view>
+                </view>
               </view>
             </view>
             <view class="todo-meta">
+              <text class="priority-text priority-text--{{item.priority}}">{{item.priorityText}}优先级</text>
               <text class="todo-due todo-due--{{item.dueStatus}} {{item.isOverdue ? 'todo-due--alert' : ''}}">{{item.dueText}}</text>
               <text wx:if="{{item.repeatText}}" class="todo-tag">{{item.repeatText}}</text>
               <text wx:if="{{item.focusText}}" class="todo-tag">{{item.focusText}}</text>
@@ -192,15 +196,15 @@
 
   <view class="bottom-nav" catchtap="noop">
     <view class="bottom-nav-item bottom-nav-item--active">
-      <text class="bottom-nav-icon">✓</text>
+      <view class="bottom-nav-icon nav-icon-todo"><view /><view /><view /></view>
       <text class="bottom-nav-label">待办</text>
     </view>
     <view class="bottom-nav-item" bindtap="onNavStats">
-      <text class="bottom-nav-icon">∑</text>
+      <view class="bottom-nav-icon nav-icon-stats"><view /><view /><view /></view>
       <text class="bottom-nav-label">统计</text>
     </view>
     <view class="bottom-nav-item" bindtap="onNavArchive">
-      <text class="bottom-nav-icon">□</text>
+      <view class="bottom-nav-icon nav-icon-archive"><view /></view>
       <text class="bottom-nav-label">归档</text>
     </view>
   </view>

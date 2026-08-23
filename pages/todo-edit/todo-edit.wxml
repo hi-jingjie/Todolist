@@ -1,97 +1,86 @@
 <view class="page">
-  <view class="card">
-    <view class="field">
-      <text class="label">标题</text>
-      <input
-        class="input"
-        value="{{title}}"
-        placeholder="要做什么？"
-        maxlength="200"
-        bindinput="onTitleInput"
-      />
+  <view class="editor-head">
+    <text class="editor-eyebrow">{{id ? '编辑任务' : '新建任务'}}</text>
+    <input class="title-input" value="{{title}}" placeholder="要完成什么？" maxlength="200" focus="{{!id}}" bindinput="onTitleInput" />
+    <text class="title-hint">先写下清晰、可以行动的任务标题</text>
+  </view>
+
+  <view class="section">
+    <view class="section-heading">
+      <text class="section-title">任务属性</text>
+      <text class="section-subtitle">安排任务的归属与时间</text>
     </view>
 
-    <view class="field field--row">
-      <text class="label">分类</text>
-      <picker
-        mode="selector"
-        range="{{categories}}"
-        range-key="name"
-        value="{{categoryIndex}}"
-        bindchange="onCategoryPick"
-      >
-        <view class="picker-val">{{categories[categoryIndex].name}}</view>
-      </picker>
-    </view>
-
-    <view class="field">
-      <text class="label">新增分类</text>
-      <view class="category-add">
-        <input
-          class="category-input"
-          value="{{newCategoryName}}"
-          placeholder="输入分类名称"
-          maxlength="12"
-          bindinput="onNewCategoryInput"
-        />
-        <view class="category-add-btn" bindtap="onAddCategory">添加</view>
-      </view>
-    </view>
-
-    <view class="field field--row">
-      <text class="label">优先级</text>
-      <picker
-        mode="selector"
-        range="{{priorities}}"
-        range-key="name"
-        value="{{priorityIndex}}"
-        bindchange="onPriorityPick"
-      >
-        <view class="picker-val">{{priorities[priorityIndex].name}}</view>
-      </picker>
-    </view>
-
-    <view class="field field--row">
-      <text class="label">截止日期</text>
-      <view class="due-edit">
-        <picker mode="date" value="{{dueDate}}" bindchange="onDuePick">
-          <view class="picker-val">{{dueDate || '未设置'}}</view>
-        </picker>
-        <view
-          wx:if="{{dueDate}}"
-          class="clear-date"
-          catchtap="onClearDueDate"
-        >
-          清空
+    <picker mode="selector" range="{{categories}}" range-key="name" value="{{categoryIndex}}" bindchange="onCategoryPick">
+      <view class="setting-row">
+        <view class="setting-copy">
+          <text class="setting-label">分类</text>
+          <text class="setting-hint">方便在首页快速筛选</text>
         </view>
+        <view class="setting-value"><text>{{categories[categoryIndex].name}}</text><text class="setting-arrow">›</text></view>
+      </view>
+    </picker>
+
+    <view class="setting-row">
+      <view class="setting-copy">
+        <text class="setting-label">优先级</text>
+        <text class="setting-hint">决定任务的醒目程度</text>
+      </view>
+      <view class="priority-options">
+        <view wx:for="{{priorities}}" wx:key="id" class="priority-option priority-option--{{item.id}} {{priority === item.id ? 'priority-option--active' : ''}}" data-id="{{item.id}}" bindtap="onPrioritySelect">{{item.name}}</view>
       </view>
     </view>
 
-    <view class="field field--row">
-      <text class="label">重复</text>
-      <picker
-        mode="selector"
-        range="{{repeats}}"
-        range-key="name"
-        value="{{repeatIndex}}"
-        bindchange="onRepeatPick"
-      >
-        <view class="picker-val">{{repeats[repeatIndex].name}}</view>
-      </picker>
-    </view>
-
-    <view class="field">
-      <text class="label">备注</text>
-      <textarea
-        class="note-input"
-        value="{{note}}"
-        placeholder="补充说明、链接或步骤"
-        maxlength="500"
-        bindinput="onNoteInput"
-      />
+    <view class="setting-row setting-row--last">
+      <view class="setting-copy">
+        <text class="setting-label">截止日期</text>
+        <text class="setting-hint">到期前会显示日期状态</text>
+      </view>
+      <view class="date-actions">
+        <picker mode="date" value="{{dueDate}}" bindchange="onDuePick">
+          <view class="date-value {{dueDate ? 'date-value--set' : ''}}">{{dueDate || '未设置'}}</view>
+        </picker>
+        <view wx:if="{{dueDate}}" class="date-clear" catchtap="onClearDueDate">×</view>
+      </view>
     </view>
   </view>
 
-  <view class="btn primary" bindtap="onSave">保存</view>
-  <view wx:if="{{id}}" class="btn ghost" bindtap="onDelete">删除</view>
+  <view class="more-toggle" bindtap="onToggleMore">
+    <view>
+      <text class="more-title">更多设置</text>
+      <text class="more-summary">备注、重复任务和自定义分类</text>
+    </view>
+    <text class="more-arrow {{moreOpen ? 'more-arrow--open' : ''}}">⌄</text>
+  </view>
+
+  <view wx:if="{{moreOpen}}" class="section section--more">
+    <view class="field-block">
+      <text class="field-label">备注</text>
+      <textarea class="note-input" value="{{note}}" placeholder="补充说明、链接或执行步骤" maxlength="500" bindinput="onNoteInput" />
+    </view>
+
+    <picker mode="selector" range="{{repeats}}" range-key="name" value="{{repeatIndex}}" bindchange="onRepeatPick">
+      <view class="setting-row setting-row--plain">
+        <view class="setting-copy">
+          <text class="setting-label">重复任务</text>
+          <text class="setting-hint">完成后自动生成下一次任务</text>
+        </view>
+        <view class="setting-value"><text>{{repeats[repeatIndex].name}}</text><text class="setting-arrow">›</text></view>
+      </view>
+    </picker>
+
+    <view class="field-block field-block--category">
+      <text class="field-label">新增自定义分类</text>
+      <view class="category-add">
+        <input class="category-input" value="{{newCategoryName}}" placeholder="例如：健身、项目" maxlength="12" bindinput="onNewCategoryInput" />
+        <view class="category-add-btn" bindtap="onAddCategory">添加</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="editor-spacer" />
+  <view class="editor-footer">
+    <view wx:if="{{id}}" class="delete-btn" bindtap="onDelete">删除</view>
+    <view class="save-btn" bindtap="onSave">{{id ? '保存修改' : '创建任务'}}</view>
+  </view>
 </view>

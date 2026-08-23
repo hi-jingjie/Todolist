@@ -193,10 +193,12 @@ function clearDoneTodos() {
 
 function completeTodo(id) {
   let createdNext = null
+  let completed = false
   const todos = getTodos().map((t) => {
     if (t.id !== id || t.done) {
       return t
     }
+    completed = true
     const next = {
       ...t,
       done: true,
@@ -210,6 +212,10 @@ function completeTodo(id) {
     todos.unshift(createdNext)
   }
   saveTodos(todos)
+  return {
+    ok: completed,
+    createdNext: !!createdNext,
+  }
 }
 
 function markTodosDone(ids) {

@@ -1,6 +1,7 @@
 const todo = require('../../utils/todo')
 const category = require('../../utils/category')
 const { buildTodoListState } = require('../../utils/todo-list-state')
+const { buildHomeOverview } = require('../../utils/stats')
 
 function buildTabs() {
   return [{ id: 'all', name: '全部' }, ...category.getCategories()]
@@ -54,10 +55,25 @@ Page({
     selectedIds: [],
     filtersOpen: false,
     filterSummary: '未完成默认视图 · 按日期',
+    overview: buildHomeOverview([]),
+    completingId: '',
   },
 
   onShow() {
-    this.refresh()
+    this._pageVisible = true
+    this.refresh({ completingId: '' })
+  },
+
+  onHide() {
+    this._pageVisible = false
+  },
+
+  onUnload() {
+    this._pageVisible = false
+    if (this._completionTimer) {
+      clearTimeout(this._completionTimer)
+      this._completionTimer = null
+    }
   },
 
   createVisibleState(patch) {
@@ -88,8 +104,10 @@ Page({
   refresh(patch) {
     const next = patch || {}
     const merged = { ...this.data, ...next }
+    const overview = buildHomeOverview(todo.getTodos())
     this.setData({
       tabs: buildTabs(),
+      overview,
       ...next,
       filterSummary: getFilterSummary(merged),
       ...this.createVisibleState(next),
@@ -193,10 +211,37 @@ Page({
 
   onToggle(e) {
     const id = e.currentTarget.dataset.id
-    if (id) {
+    if (!id || this.data.completingId) {
+      return
+    }
+    const item = todo.getTodoById(id)
+    if (!item) {
+      return
+    }
+    if (item.done) {
       todo.toggleTodo(id)
       this.refresh()
+      wx.showToast({ title: '已恢复为未完成', icon: 'none' })
+      return
     }
+    const result = todo.completeTodo(id)
+    this.setData({
+      completingId: id,
+      list: this.data.list.map((current) =>
+        current.id === id ? { ...current, done: true } : current
+      ),
+    })
+    this._completionTimer = setTimeout(() => {
+      this._completionTimer = null
+      if (!this._pageVisible) {
+        return
+      }
+      this.refresh({ completingId: '' })
+      wx.showToast({
+        title: result.createdNext ? '已完成，并创建下次任务' : '任务已完成',
+        icon: 'none',
+      })
+    }, 320)
   },
 
   onEdit(e) {

@@ -26,15 +26,15 @@
 
   <view class="bottom-nav">
     <view class="bottom-nav-item" bindtap="onNavTodo">
-      <text class="bottom-nav-icon">✓</text>
+      <view class="bottom-nav-icon nav-icon-todo"><view /><view /><view /></view>
       <text class="bottom-nav-label">待办</text>
     </view>
     <view class="bottom-nav-item" bindtap="onNavStats">
-      <text class="bottom-nav-icon">∑</text>
+      <view class="bottom-nav-icon nav-icon-stats"><view /><view /><view /></view>
       <text class="bottom-nav-label">统计</text>
     </view>
     <view class="bottom-nav-item bottom-nav-item--active">
-      <text class="bottom-nav-icon">□</text>
+      <view class="bottom-nav-icon nav-icon-archive"><view /></view>
       <text class="bottom-nav-label">归档</text>
     </view>
   </view>

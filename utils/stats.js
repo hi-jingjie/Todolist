@@ -69,6 +69,75 @@ function buildTodoStats(todos, today) {
   }
 }
 
+function buildHomeOverview(todos, today) {
+  const current = today instanceof Date ? today : new Date()
+  const stats = buildTodoStats(todos, current)
+  const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+  return {
+    dateText: `${current.getMonth() + 1}月${current.getDate()}日 ${weekdays[current.getDay()]}`,
+    summaryText: `${stats.activeCount} 个未完成 · ${stats.overdueCount} 个已逾期 · 专注 ${stats.focusMinutes} 分钟`,
+  }
+}
+
+function buildCompletionInsights(todos, categories, today) {
+  const list = Array.isArray(todos) ? todos : []
+  const current = startOfDay(today instanceof Date ? today : new Date())
+  const trendCompleted = list.filter((item) => item.done && item.completedAt)
+  const categoryCompleted = list.filter((item) => item.done)
+  const dailyCounts = new Map()
+
+  trendCompleted.forEach((item) => {
+    const date = new Date(item.completedAt)
+    const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+    dailyCounts.set(key, (dailyCounts.get(key) || 0) + 1)
+  })
+
+  const weekTrend = []
+  for (let offset = 6; offset >= 0; offset -= 1) {
+    const date = new Date(current.getTime())
+    date.setDate(date.getDate() - offset)
+    const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+    weekTrend.push({
+      dateText: `${date.getMonth() + 1}/${date.getDate()}`,
+      weekText: ['日', '一', '二', '三', '四', '五', '六'][date.getDay()],
+      count: dailyCounts.get(key) || 0,
+    })
+  }
+
+  const maxCount = Math.max(0, ...weekTrend.map((item) => item.count))
+  weekTrend.forEach((item) => {
+    item.height = maxCount ? Math.round((item.count / maxCount) * 100) : 0
+  })
+
+  const names = new Map(
+    (Array.isArray(categories) ? categories : []).map((item) => [
+      item.id,
+      item.name,
+    ])
+  )
+  const categoryCounts = new Map()
+  categoryCompleted.forEach((item) => {
+    const id = item.category || 'other'
+    categoryCounts.set(id, (categoryCounts.get(id) || 0) + 1)
+  })
+  const completedCount = categoryCompleted.length
+  const categoryBreakdown = Array.from(categoryCounts.entries())
+    .map(([id, count]) => ({
+      id,
+      name: names.get(id) || '其他',
+      count,
+      percent: completedCount ? Math.round((count / completedCount) * 100) : 0,
+    }))
+    .sort((a, b) => b.count - a.count)
+
+  return {
+    weekTrend,
+    categoryBreakdown,
+  }
+}
+
 module.exports = {
+  buildCompletionInsights,
+  buildHomeOverview,
   buildTodoStats,
 }

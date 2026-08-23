@@ -1,5 +1,6 @@
 const todo = require('../../utils/todo')
-const { buildTodoStats } = require('../../utils/stats')
+const category = require('../../utils/category')
+const { buildCompletionInsights, buildTodoStats } = require('../../utils/stats')
 
 function formatFocus(minutes) {
   if (minutes < 60) {
@@ -22,13 +23,29 @@ Page({
       focusMinutes: 0,
     },
     focusText: '0 分钟',
+    weekTrend: [],
+    categoryBreakdown: [],
+    trendTotal: 0,
   },
 
   onShow() {
-    const stats = buildTodoStats(todo.getTodos(), new Date())
+    const todos = todo.getTodos()
+    const today = new Date()
+    const stats = buildTodoStats(todos, today)
+    const insights = buildCompletionInsights(
+      todos,
+      category.getCategories(),
+      today
+    )
     this.setData({
       stats,
       focusText: formatFocus(stats.focusMinutes),
+      weekTrend: insights.weekTrend,
+      trendTotal: insights.weekTrend.reduce((sum, item) => sum + item.count, 0),
+      categoryBreakdown: insights.categoryBreakdown.map((item, index) => ({
+        ...item,
+        tone: index % 4,
+      })),
     })
   },
 

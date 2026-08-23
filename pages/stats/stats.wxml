@@ -1,52 +1,101 @@
 <view class="page">
   <view class="header">
-    <text class="title">数据概览</text>
-    <text class="subtitle">看看最近做成了多少事</text>
+    <text class="header-eyebrow">任务统计</text>
+    <text class="title">你的进度，一目了然</text>
+    <text class="subtitle">每一次完成和专注都值得被记录</text>
   </view>
 
-  <view class="summary-card">
-    <text class="summary-label">累计专注</text>
-    <text class="summary-value">{{focusText}}</text>
+  <view class="focus-summary">
+    <view>
+      <text class="focus-label">累计专注</text>
+      <text class="focus-value">{{focusText}}</text>
+    </view>
+    <view class="focus-mark"><view class="focus-mark-dot" /></view>
   </view>
 
-  <view class="grid">
-    <view class="stat-card">
-      <text class="stat-value">{{stats.todayCompleted}}</text>
-      <text class="stat-label">今日完成</text>
+  <view class="metric-grid">
+    <view class="metric-item">
+      <text class="metric-value">{{stats.todayCompleted}}</text>
+      <text class="metric-label">今日完成</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-value">{{stats.weekCompleted}}</text>
-      <text class="stat-label">本周完成</text>
+    <view class="metric-item">
+      <text class="metric-value">{{stats.weekCompleted}}</text>
+      <text class="metric-label">本周完成</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-value danger">{{stats.overdueCount}}</text>
-      <text class="stat-label">逾期待办</text>
+    <view class="metric-item metric-item--danger">
+      <text class="metric-value">{{stats.overdueCount}}</text>
+      <text class="metric-label">已经逾期</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-value">{{stats.activeCount}}</text>
-      <text class="stat-label">未完成</text>
+    <view class="metric-item">
+      <text class="metric-value">{{stats.activeCount}}</text>
+      <text class="metric-label">正在进行</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-value">{{stats.archivedCount}}</text>
-      <text class="stat-label">已归档</text>
+  </view>
+
+  <view class="insight-section">
+    <view class="section-head">
+      <view>
+        <text class="section-title">最近 7 天</text>
+        <text class="section-subtitle">每天完成的任务数量</text>
+      </view>
+      <text class="section-total">{{trendTotal}} 项</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-value">{{stats.pinnedCount}}</text>
-      <text class="stat-label">置顶中</text>
+    <view class="trend-chart">
+      <view wx:for="{{weekTrend}}" wx:key="dateText" class="trend-column {{index === 6 ? 'trend-column--today' : ''}}">
+        <view class="trend-value">{{item.count || ''}}</view>
+        <view class="trend-track">
+          <view class="trend-bar" style="height: {{item.height}}%;" />
+        </view>
+        <text class="trend-day">{{item.weekText}}</text>
+      </view>
     </view>
+  </view>
+
+  <view class="insight-section category-section">
+    <view class="section-head">
+      <view>
+        <text class="section-title">完成分布</text>
+        <text class="section-subtitle">已归档任务的分类占比</text>
+      </view>
+      <text class="section-total">{{stats.archivedCount}} 项</text>
+    </view>
+
+    <block wx:if="{{categoryBreakdown.length}}">
+      <view wx:for="{{categoryBreakdown}}" wx:key="id" class="category-row">
+        <view class="category-copy">
+          <view class="category-name-wrap">
+            <view class="category-dot category-tone-{{item.tone}}" />
+            <text class="category-name">{{item.name}}</text>
+          </view>
+          <text class="category-count">{{item.count}} 项 · {{item.percent}}%</text>
+        </view>
+        <view class="category-track">
+          <view class="category-fill category-tone-{{item.tone}}" style="width: {{item.percent}}%;" />
+        </view>
+      </view>
+    </block>
+    <view wx:else class="chart-empty">
+      <text class="chart-empty-title">还没有完成记录</text>
+      <text class="chart-empty-hint">完成第一条任务后，这里会出现分类分布</text>
+    </view>
+  </view>
+
+  <view class="minor-stats">
+    <text>已归档 {{stats.archivedCount}}</text>
+    <text>置顶中 {{stats.pinnedCount}}</text>
   </view>
 
   <view class="bottom-nav">
     <view class="bottom-nav-item" bindtap="onNavTodo">
-      <text class="bottom-nav-icon">✓</text>
+      <view class="bottom-nav-icon nav-icon-todo"><view /><view /><view /></view>
       <text class="bottom-nav-label">待办</text>
     </view>
     <view class="bottom-nav-item bottom-nav-item--active">
-      <text class="bottom-nav-icon">∑</text>
+      <view class="bottom-nav-icon nav-icon-stats"><view /><view /><view /></view>
       <text class="bottom-nav-label">统计</text>
     </view>
     <view class="bottom-nav-item" bindtap="onNavArchive">
-      <text class="bottom-nav-icon">□</text>
+      <view class="bottom-nav-icon nav-icon-archive"><view /></view>
       <text class="bottom-nav-label">归档</text>
     </view>
   </view>

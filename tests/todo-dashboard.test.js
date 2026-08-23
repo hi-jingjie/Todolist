@@ -14,7 +14,7 @@ global.wx = {
 
 const todo = require('../utils/todo')
 const { buildTodoListState } = require('../utils/todo-list-state')
-const { buildTodoStats } = require('../utils/stats')
+const { buildHomeOverview, buildTodoStats } = require('../utils/stats')
 
 todo.addTodo({
   title: '普通任务',
@@ -80,6 +80,15 @@ assert.strictEqual(stats.weekCompleted, 1, 'counts completed tasks this week')
 assert.strictEqual(stats.archivedCount, 1, 'counts archived tasks')
 assert.strictEqual(stats.activeCount, 2, 'counts active tasks')
 assert.strictEqual(stats.focusMinutes, 25, 'sums focus minutes')
+
+const overview = buildHomeOverview(todo.getTodos(), new Date(2026, 6, 18))
+
+assert.strictEqual(overview.dateText, '7月18日 星期六', 'formats home date')
+assert.strictEqual(
+  overview.summaryText,
+  '2 个未完成 · 0 个已逾期 · 专注 25 分钟',
+  'builds the compact home summary'
+)
 
 todo.updateTodo(done.id, { done: false })
 const restoredStats = buildTodoStats(todo.getTodos(), new Date(2026, 6, 18))

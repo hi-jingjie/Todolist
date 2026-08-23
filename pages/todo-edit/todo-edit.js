@@ -35,6 +35,7 @@ Page({
     repeats,
     repeatIndex: 0,
     repeat: 'none',
+    moreOpen: false,
   },
 
   onLoad(options) {
@@ -68,6 +69,7 @@ Page({
         note: item.note || '',
         repeatIndex: indexById(repeats, repeat, 0),
         repeat,
+        moreOpen: !!item.note || repeat !== 'none',
       })
     } else {
       wx.setNavigationBarTitle({ title: '新增待办' })
@@ -84,6 +86,7 @@ Page({
         repeatIndex: 0,
         repeat: 'none',
         newCategoryName: '',
+        moreOpen: false,
       })
     }
   },
@@ -112,6 +115,14 @@ Page({
 
   onDuePick(e) {
     this.setData({ dueDate: e.detail.value || '' })
+  },
+
+  onPrioritySelect(e) {
+    const priority = e.currentTarget.dataset.id
+    this.setData({
+      priority,
+      priorityIndex: indexById(priorities, priority, 1),
+    })
   },
 
   onNoteInput(e) {
@@ -150,6 +161,10 @@ Page({
 
   onClearDueDate() {
     this.setData({ dueDate: '' })
+  },
+
+  onToggleMore() {
+    this.setData({ moreOpen: !this.data.moreOpen })
   },
 
   onSave() {

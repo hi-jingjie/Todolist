@@ -1,6 +1,0 @@
-{
-  "description": "本地调试：关闭「过滤无依赖文件」，避免自定义组件被代码依赖分析误忽略（可与工具详情-本地设置同步）",
-  "setting": {
-    "ignoreDevUnusedFiles": false
-  }
-}
