@@ -13,6 +13,8 @@ $RECYCLE.BIN/
 # Node.js
 node_modules/
 .worktrees/
+.dev.vars*
+cloudfunctions/task-extractor/.dev.vars*
 
 # WeChat Developer Tools local settings
 project.private.config.json
