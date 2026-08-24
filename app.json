@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/ingest/ingest",
     "pages/todo-edit/todo-edit",
     "pages/focus/focus",
     "pages/stats/stats",
