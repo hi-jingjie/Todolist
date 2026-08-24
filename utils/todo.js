@@ -15,6 +15,14 @@ function validRepeat(repeat) {
   return isAllowedRepeat(repeat) ? repeat : 'none'
 }
 
+function validMinutes(value) {
+  return Number.isInteger(value) && value > 0 ? value : null
+}
+
+function validPlanProof(planProof) {
+  return planProof && typeof planProof === 'object' ? planProof : null
+}
+
 function parseDate(dateText) {
   const match = String(dateText || '').match(/^(\d{4})-(\d{2})-(\d{2})$/)
   if (!match) {
@@ -126,6 +134,9 @@ function addTodo(payload) {
     focusSeconds: 0,
     focusCount: 0,
     pinned: !!payload.pinned,
+    estimateMinutes: validMinutes(payload.estimateMinutes),
+    actualMinutes: validMinutes(payload.actualMinutes),
+    planProof: validPlanProof(payload.planProof),
     createdAt: Date.now(),
   })
   saveTodos(todos)
@@ -167,6 +178,15 @@ function updateTodo(id, payload) {
     }
     if (payload.pinned !== undefined) {
       next.pinned = !!payload.pinned
+    }
+    if (payload.estimateMinutes !== undefined) {
+      next.estimateMinutes = validMinutes(payload.estimateMinutes)
+    }
+    if (payload.actualMinutes !== undefined) {
+      next.actualMinutes = validMinutes(payload.actualMinutes)
+    }
+    if (payload.planProof !== undefined) {
+      next.planProof = validPlanProof(payload.planProof)
     }
     return next
   })
@@ -284,6 +304,19 @@ function getTodoById(id) {
   return getTodos().find((t) => t.id === id) || null
 }
 
+function recordActualMinutes(id, actualMinutes) {
+  const target = getTodoById(id)
+  if (!target) {
+    return { ok: false, message: '任务不存在' }
+  }
+  if (!Number.isInteger(actualMinutes) || actualMinutes <= 0) {
+    return { ok: false, message: '请输入大于 0 的分钟数' }
+  }
+
+  updateTodo(id, { actualMinutes })
+  return { ok: true }
+}
+
 
 module.exports = {
   initIfNeeded,
@@ -301,4 +334,5 @@ module.exports = {
   togglePin,
   toggleTodo,
   getTodoById,
+  recordActualMinutes,
 }
