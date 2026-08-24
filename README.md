@@ -4,6 +4,16 @@
 
 [查看 V2.0.0 Release](https://github.com/hi-jingjie/Todolist/releases/tag/v2.0.0) · [查看 V1.0.0 Release](https://github.com/hi-jingjie/Todolist/releases/tag/v1.0.0)
 
+## 界面演示
+
+| 待办首页 | AI 导入任务 | 今日计划 |
+| --- | --- | --- |
+| <img src="docs/images/home.png" alt="待办首页" width="220"> | <img src="docs/images/ai-import.png" alt="AI 导入任务" width="220"> | <img src="docs/images/daily-plan.png" alt="今日计划与实际耗时" width="220"> |
+
+| 编辑待办 | 数据统计 | 完成归档 |
+| --- | --- | --- |
+| <img src="docs/images/task-editor.png" alt="编辑待办" width="220"> | <img src="docs/images/stats.png" alt="数据统计" width="220"> | <img src="docs/images/archive.png" alt="完成归档" width="220"> |
+
 ## 为什么做这个项目
 
 大学生常常从群公告、课程通知和活动消息里看到任务：截止日期、提交材料和优先级混在一段文字中。普通待办工具需要手动录入；普通 AI 提取又可能编造截止日期或直接把错误任务写进清单。
