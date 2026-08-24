@@ -263,6 +263,18 @@ Page({
     })
   },
 
+  onNavIngest() {
+    wx.navigateTo({
+      url: '/pages/ingest/ingest',
+    })
+  },
+
+  onNavPlan() {
+    wx.navigateTo({
+      url: '/pages/plan/plan',
+    })
+  },
+
   onFocus() {
     wx.navigateTo({
       url: '/pages/focus/focus',

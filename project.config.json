@@ -31,6 +31,7 @@
     }
   },
   "compileType": "miniprogram",
+  "cloudfunctionRoot": "cloudfunctions/",
   "libVersion": "3.5.5",
   "appid": "wxbc5d7507261fbce3",
   "projectname": "Todolist",

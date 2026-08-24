@@ -1,0 +1,49 @@
+<view class="page">
+  <view class="hero">
+    <text class="eyebrow">PLANPROOF · AI 导入</text>
+    <text class="title">把通知变成可确认的任务</text>
+    <text class="subtitle">每条建议都会附上原文依据；未通过校验的内容不能保存。</text>
+  </view>
+
+  <view class="card source-card">
+    <view class="card-head">
+      <text class="card-title">粘贴通知、作业要求或会议纪要</text>
+      <text class="count {{isTooLong ? 'count--danger' : ''}}">{{sourceLength}} / 5000</text>
+    </view>
+    <textarea
+      class="source-input"
+      value="{{sourceText}}"
+      placeholder="例如：请于 9 月 1 日前提交创新创业比赛报名表……"
+      maxlength="5001"
+      auto-height
+      bindinput="onSourceInput"
+    />
+    <view class="card-foot">
+      <text wx:if="{{isTooLong}}" class="error">内容超过 5000 字，请精简后再试</text>
+      <text wx:else class="hint">还可输入 {{remainingCharacters}} 字</text>
+      <button class="extract-btn" disabled="{{!canExtract}}" loading="{{loading}}" bindtap="onExtract">{{loading ? '正在提取…' : '提取任务草稿'}}</button>
+    </view>
+  </view>
+
+  <view wx:if="{{error}}" class="error-panel">{{error}}</view>
+  <view wx:if="{{invalidSummary}}" class="invalid-panel">{{invalidSummary}}，不会显示确认按钮。</view>
+
+  <view wx:if="{{validTasks.length}}" class="results-title">请逐条确认</view>
+  <view wx:for="{{validTasks}}" wx:key="index" class="card task-card">
+    <view class="task-title">{{item.title}}</view>
+    <view class="meta-row">
+      <text>截止：{{item.dueText}}</text>
+      <text>预计：{{item.estimateText}}</text>
+      <text>优先级：{{item.priority}}</text>
+    </view>
+    <view class="evidence">
+      <text class="evidence-label">原文依据</text>
+      <text class="evidence-text">“{{item.evidenceQuote}}”</text>
+    </view>
+    <view class="confidence">模型置信度：{{item.confidencePercent}}%</view>
+    <view wx:if="{{item.uncertaintyText}}" class="uncertainty">待确认：{{item.uncertaintyText}}</view>
+    <button class="confirm-btn" data-index="{{index}}" bindtap="onConfirmTask">确认并加入待办</button>
+  </view>
+
+  <view wx:if="{{!loading && !validTasks.length && !invalidTasks.length && sourceText}}" class="empty">点击“提取任务草稿”，AI 才会开始分析。</view>
+</view>

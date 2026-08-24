@@ -7,6 +7,22 @@
     </view>
   </view>
 
+  <view class="ai-entry" bindtap="onNavIngest">
+    <view class="ai-entry-copy">
+      <text class="ai-entry-title">AI 导入任务</text>
+      <text class="ai-entry-hint">粘贴通知，逐条确认后加入待办</text>
+    </view>
+    <text class="ai-entry-arrow">›</text>
+  </view>
+
+  <view class="ai-entry ai-entry--plan" bindtap="onNavPlan">
+    <view class="ai-entry-copy">
+      <text class="ai-entry-title">今日计划</text>
+      <text class="ai-entry-hint">按真实可用时间安排任务，并记录实际耗时</text>
+    </view>
+    <text class="ai-entry-arrow">›</text>
+  </view>
+
   <scroll-view
     class="tabs-scroll"
     scroll-x
