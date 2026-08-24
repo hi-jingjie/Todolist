@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/ingest/ingest",
+    "pages/plan/plan",
     "pages/todo-edit/todo-edit",
     "pages/focus/focus",
     "pages/stats/stats",
